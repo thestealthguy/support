@@ -2,83 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stealth Support Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: white; font-family: 'Inter', system-ui, sans-serif; }
-        .card { background: #1e293b; border-radius: 24px; padding: 30px; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .logo-box { display: flex; justify-content: center; margin-bottom: 20px; }
-        .logo-img { max-width: 260px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
-        .chat-box { background: #0f172a; border: 1px solid #334155; border-radius: 20px; padding: 25px; height: 420px; overflow-y: auto; margin-bottom: 20px; border-left: 6px solid #3b82f6; }
-        .btn { background: #3b82f6; padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; color: white; border: none; transition: all 0.2s; margin: 4px; box-shadow: 0 4px 0px #2563eb; }
-        .btn:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 6px 0px #1d4ed8; }
-        .btn:active { transform: translateY(2px); box-shadow: none; }
-        input { background: #1e293b; border: 2px solid #334155; padding: 14px; border-radius: 14px; color: white; width: 80%; outline: none; font-size: 16px; }
-        input:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
-        .bot-msg { color: #93c5fd; line-height: 1.6; }
-        .user-msg { color: #cbd5e1; font-weight: 500; }
-        strong { color: #60a5fa; }
+        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .card { background: #1e293b; border-radius: 24px; padding: 25px; border: 1px solid #334155; }
+        .logo-img { max-width: 200px; margin: 0 auto 20px auto; display: block; }
+        .chat-box { background: #0f172a; border: 1px solid #334155; border-radius: 18px; padding: 20px; height: 380px; overflow-y: auto; margin-bottom: 20px; }
+        .history-item { border-bottom: 1px solid #334155; padding: 8px 0; font-size: 0.8rem; color: #94a3b8; }
+        .btn { background: #3b82f6; padding: 10px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; color: white; border: none; font-size: 0.85rem; }
+        #app-content { display: none; }
+        .status-dot { height: 10px; width: 10px; background-color: #22c55e; border-radius: 50%; display: inline-block; margin-right: 5px; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 md:p-8">
-    <div class="max-w-2xl w-full">
-        
-        <div class="logo-box">
-            <img src="logo.png" alt="Stealth Support Logo" class="logo-img">
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="lock-screen" class="max-w-md w-full">
+        <img src="logo.png" alt="Stealth Logo" class="logo-img">
+        <div class="card text-center">
+            <h2 class="text-xl font-bold mb-6">Member Access</h2>
+            <input type="password" id="pass-input" placeholder="Enter ID" class="w-full mb-4 bg-slate-900 border border-slate-700 p-3 rounded-lg text-white outline-none">
+            <button onclick="checkPassword()" class="btn w-full">Unlock</button>
         </div>
-        
-        <div class="card">
-            <div id="chat-display" class="chat-box text-lg">
-                <p class="bot-msg"><strong>Stealth Brain:</strong> Systems Online. I am your 24/7 technical guide for <strong>Stealth</strong> services. <br><br>Please select a category below or type a question about your <strong>ONN 4K Plus</strong> remote.</p>
-            </div>
+    </div>
 
-            <div class="flex gap-3 mb-8">
-                <input type="text" id="user-input" placeholder="How do I find sports?">
-                <button onclick="askBrain()" class="btn" style="margin:0; box-shadow: none;">ASK</button>
+    <div id="app-content" class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="md:col-span-1">
+            <div class="card h-full flex flex-col">
+                <h3 class="font-bold text-blue-400 mb-4 text-xs tracking-widest uppercase">History</h3>
+                <div id="history-list" class="flex-grow overflow-y-auto"></div>
+                <button onclick="location.reload()" class="mt-4 text-xs text-slate-500">Logout</button>
             </div>
+        </div>
 
-            <div class="text-center">
-                <p class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Support Modules</p>
-                <div class="flex flex-wrap justify-center">
-                    <button onclick="addMessage('Remote Guide', '<b>ONN 4K Remote Layout:</b><br>• <b>Big Circle:</b> Navigation/Steering.<br>• <b>Center Button:</b> OK/Select.<br>• <b>Back Arrow:</b> Go back 1 step.<br>• <b>House:</b> Exit to Home Screen.')" class="btn">Remote Guide</button>
-                    <button onclick="addMessage('Stealth IPTV Mate', '<b>Features:</b><br>• <b>Left Arrow:</b> Opens Channel Groups.<br>• <b>Long Press Center:</b> Opens Main Side Menu.<br>• <b>OK Button:</b> Shows the Mini-Guide while watching.')" class="btn">IPTV Mate</button>
-                    <button onclick="addMessage('Stealth Tube', '<b>Ad-Free YouTube:</b><br>• <b>Left/Right Circle:</b> Skip 10 seconds.<br>• <b>Back Arrow:</b> Exit video to search.')" class="btn">Stealth Tube</button>
+        <div class="md:col-span-3">
+            <div class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <img src="logo.png" alt="Stealth" class="w-28">
+                    <span class="text-xs text-blue-400"><span class="status-dot"></span> SECURE TUNNEL ACTIVE</span>
+                </div>
+                <div id="chat-display" class="chat-box">
+                    <p class="text-blue-300"><strong>Stealth Brain:</strong> Identity verified. Tailscale module loaded. How can I help?</p>
+                </div>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="user-input" class="flex-grow bg-slate-900 border border-slate-700 p-3 rounded-lg text-white outline-none" placeholder="Ask about 'Tailscale' or 'Remote'...">
+                    <button onclick="askBrain()" class="btn px-8">ASK</button>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="addMessage('Tailscale Fix', '<b>Tailscale Setup:</b><br>1. Press the <b>Home (House)</b> button.<br>2. Open the <b>Tailscale App</b>.<br>3. Ensure the switch is toggled <b>ON</b>.<br>4. You must see the word <b>ACTIVE</b> in green.')" class="btn bg-slate-700">Tailscale Help</button>
+                    <button onclick="addMessage('No Video', '<b>If Video Stops:</b><br>1. Check Tailscale first.<br>2. Go to Settings > Apps > Stealth IPTV Mate > <b>Force Stop</b>.<br>3. Re-open the app.')" class="btn bg-slate-700">Fix Buffering</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const chatDisplay = document.getElementById('chat-display');
-        const userInput = document.getElementById('user-input');
+        const USER_DATABASE = ["client101", "stealth_vip", "12345"]; 
+        let currentHistory = JSON.parse(localStorage.getItem('stealth_history')) || [];
+
+        function checkPassword() {
+            const val = document.getElementById('pass-input').value;
+            if (USER_DATABASE.includes(val)) {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('app-content').style.display = 'grid';
+                loadHistory();
+            }
+        }
+
+        function loadHistory() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = currentHistory.length ? currentHistory.map(h => `<div class="history-item">${h}</div>`).reverse().join('') : "<p class='text-xs italic'>Empty.</p>";
+        }
 
         function addMessage(userText, botResponse) {
-            chatDisplay.innerHTML += `<div class="mb-4 mt-2"><span class="user-msg"><b>Client:</b> ${userText}</span></div>`;
-            chatDisplay.innerHTML += `<div class="mb-8 bot-msg"><b>Stealth Brain:</b> ${botResponse}</div>`;
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            chatDisplay.innerHTML += `<div class="mb-4"><strong>You:</strong> <span class="text-slate-300">${userText}</span></div>`;
+            chatDisplay.innerHTML += `<div class="mb-6 text-blue-300"><strong>Brain:</strong> ${botResponse}</div>`;
             chatDisplay.scrollTop = chatDisplay.scrollHeight;
+            currentHistory.push(`${time}: ${userText}`);
+            localStorage.setItem('stealth_history', JSON.stringify(currentHistory));
+            loadHistory();
         }
 
         function askBrain() {
             const text = userInput.value.toLowerCase();
-            if (text === "") return;
-            
-            let response = "I don't have a specific answer for that. Try asking about 'Remote', 'Sports', or 'Movies'.";
-
-            if (text.includes("remote") || text.includes("button") || text.includes("onn")) {
-                response = "On your ONN remote, the <b>Center Circle</b> is your OK/Select button. The <b>Back Arrow</b> (left of the house) takes you back one step. The <b>House</b> button exits to the Projectivy screen.";
-            } else if (text.includes("sport") || text.includes("group") || text.includes("category")) {
-                response = "In <b>Stealth IPTV Mate</b>, press the <b>Left Arrow</b> on the remote circle to browse categories like Sports, News, and Kids.";
-            } else if (text.includes("movie") || text.includes("vod")) {
-                response = "For Movies, hold the <b>Center Button</b> for 2 seconds to open the side menu, then navigate down to the <b>VOD</b> (Play icon) section.";
-            } else if (text.includes("tube")) {
-                response = "<b>Stealth Tube</b> is your ad-free YouTube experience. Navigate using the circle and use <b>Back</b> to exit any video.";
+            if (!text) return;
+            let res = "I'm still learning. Try 'Tailscale', 'Remote', or 'Mate'.";
+            if (text.includes("tail") || text.includes("tunnel")) {
+                res = "Make sure the <b>Tailscale</b> app says <b>Active</b>. If it says 'Stopped', click the switch to turn it back on.";
+            } else if (text.includes("remote")) {
+                res = "ONN Remote: <b>Center</b> = OK, <b>Back</b> (left of home) = Go back 1 screen.";
+            } else if (text.includes("mate") || text.includes("live")) {
+                res = "In Stealth IPTV Mate, press <b>Left</b> on the circle to see channel groups.";
             }
-
-            addMessage(userInput.value, response);
+            addMessage(userInput.value, res);
             userInput.value = "";
         }
-        userInput.addEventListener("keypress", (e) => { if (e.key === "Enter") askBrain(); });
+        userInput.addEventListener("keypress", (e) => e.key === "Enter" && askBrain());
+        document.getElementById('pass-input').addEventListener("keypress", (e) => e.key === "Enter" && checkPassword());
     </script>
 </body>
 </html>
