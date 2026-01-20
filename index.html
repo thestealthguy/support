@@ -6,56 +6,79 @@
     <title>Stealth Support Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: white; font-family: sans-serif; }
-        .card { background: #1e293b; border-radius: 15px; padding: 25px; border: 1px solid #334155; }
-        .btn { background: #3b82f6; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; color: white; margin: 5px; }
-        .btn:hover { background: #2563eb; transform: scale(1.02); }
+        body { background-color: #0f172a; color: white; font-family: 'Inter', system-ui, sans-serif; }
+        .card { background: #1e293b; border-radius: 24px; padding: 30px; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .logo-box { display: flex; justify-content: center; margin-bottom: 20px; }
+        .logo-img { max-width: 260px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+        .chat-box { background: #0f172a; border: 1px solid #334155; border-radius: 20px; padding: 25px; height: 420px; overflow-y: auto; margin-bottom: 20px; border-left: 6px solid #3b82f6; }
+        .btn { background: #3b82f6; padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; color: white; border: none; transition: all 0.2s; margin: 4px; box-shadow: 0 4px 0px #2563eb; }
+        .btn:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 6px 0px #1d4ed8; }
+        .btn:active { transform: translateY(2px); box-shadow: none; }
+        input { background: #1e293b; border: 2px solid #334155; padding: 14px; border-radius: 14px; color: white; width: 80%; outline: none; font-size: 16px; }
+        input:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        .bot-msg { color: #93c5fd; line-height: 1.6; }
+        .user-msg { color: #cbd5e1; font-weight: 500; }
+        strong { color: #60a5fa; }
     </style>
 </head>
-<body class="p-4 md:p-10">
-    <div class="max-w-xl mx-auto">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-extrabold text-blue-400">STEALTH</h1>
-            <p class="text-slate-400">Customer Self-Service Portal</p>
+<body class="flex items-center justify-center min-h-screen p-4 md:p-8">
+    <div class="max-w-2xl w-full">
+        
+        <div class="logo-box">
+            <img src="logo.png" alt="Stealth Support Logo" class="logo-img">
         </div>
         
-        <div id="app" class="card shadow-2xl min-h-[400px] flex flex-col justify-between">
-            <div id="chat" class="space-y-4">
-                <p class="text-xl">👋 <strong>Welcome to Stealth Support!</strong></p>
-                <p class="text-slate-300">I am your automated guide. How can I help you with your <strong>ONN 4K Plus</strong> or <strong>Stealth IPTV Mate</strong> today?</p>
+        <div class="card">
+            <div id="chat-display" class="chat-box text-lg">
+                <p class="bot-msg"><strong>Stealth Brain:</strong> Systems Online. I am your 24/7 technical guide for <strong>Stealth</strong> services. <br><br>Please select a category below or type a question about your <strong>ONN 4K Plus</strong> remote.</p>
             </div>
 
-            <div id="options" class="mt-8 flex flex-wrap">
-                <button onclick="showRemote()" class="btn">Help with Remote</button>
-                <button onclick="showFeatures()" class="btn">Player Features</button>
+            <div class="flex gap-3 mb-8">
+                <input type="text" id="user-input" placeholder="How do I find sports?">
+                <button onclick="askBrain()" class="btn" style="margin:0; box-shadow: none;">ASK</button>
+            </div>
+
+            <div class="text-center">
+                <p class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Support Modules</p>
+                <div class="flex flex-wrap justify-center">
+                    <button onclick="addMessage('Remote Guide', '<b>ONN 4K Remote Layout:</b><br>• <b>Big Circle:</b> Navigation/Steering.<br>• <b>Center Button:</b> OK/Select.<br>• <b>Back Arrow:</b> Go back 1 step.<br>• <b>House:</b> Exit to Home Screen.')" class="btn">Remote Guide</button>
+                    <button onclick="addMessage('Stealth IPTV Mate', '<b>Features:</b><br>• <b>Left Arrow:</b> Opens Channel Groups.<br>• <b>Long Press Center:</b> Opens Main Side Menu.<br>• <b>OK Button:</b> Shows the Mini-Guide while watching.')" class="btn">IPTV Mate</button>
+                    <button onclick="addMessage('Stealth Tube', '<b>Ad-Free YouTube:</b><br>• <b>Left/Right Circle:</b> Skip 10 seconds.<br>• <b>Back Arrow:</b> Exit video to search.')" class="btn">Stealth Tube</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const chat = document.getElementById('chat');
-        const options = document.getElementById('options');
+        const chatDisplay = document.getElementById('chat-display');
+        const userInput = document.getElementById('user-input');
 
-        function showRemote() {
-            chat.innerHTML = `
-                <p class="text-blue-400 font-bold underline">The ONN 4K Plus Remote Guide:</p>
-                <ul class="list-disc ml-5 space-y-2 text-slate-200">
-                    <li><strong>Big Circle:</strong> This is your 'D-Pad'. Press top/bottom/left/right to move.</li>
-                    <li><strong>Center Button:</strong> The circle in the middle. Click it to SELECT.</li>
-                    <li><strong>Back Button:</strong> The arrow pointing left. Use this to go back one screen.</li>
-                    <li><strong>Home Button:</strong> The house icon. This takes you to the Projectivy screen.</li>
-                </ul>
-                <p class="mt-4 italic text-sm">Where are you stuck on the remote?</p>`;
-            options.innerHTML = `<button onclick="location.reload()" class="btn">Back to Start</button>`;
+        function addMessage(userText, botResponse) {
+            chatDisplay.innerHTML += `<div class="mb-4 mt-2"><span class="user-msg"><b>Client:</b> ${userText}</span></div>`;
+            chatDisplay.innerHTML += `<div class="mb-8 bot-msg"><b>Stealth Brain:</b> ${botResponse}</div>`;
+            chatDisplay.scrollTop = chatDisplay.scrollHeight;
         }
 
-        function showFeatures() {
-            chat.innerHTML = `
-                <p class="text-blue-400 font-bold underline">Stealth IPTV Mate Features:</p>
-                <p>Inside the player, you have "Live TV" and "VOD" (Movies).</p>
-                <p class="mt-2"><strong>Secret Tip:</strong> Hold down the Center Button for 2 seconds to see your Channel Groups!</p>`;
-            options.innerHTML = `<button onclick="location.reload()" class="btn">Back to Start</button>`;
+        function askBrain() {
+            const text = userInput.value.toLowerCase();
+            if (text === "") return;
+            
+            let response = "I don't have a specific answer for that. Try asking about 'Remote', 'Sports', or 'Movies'.";
+
+            if (text.includes("remote") || text.includes("button") || text.includes("onn")) {
+                response = "On your ONN remote, the <b>Center Circle</b> is your OK/Select button. The <b>Back Arrow</b> (left of the house) takes you back one step. The <b>House</b> button exits to the Projectivy screen.";
+            } else if (text.includes("sport") || text.includes("group") || text.includes("category")) {
+                response = "In <b>Stealth IPTV Mate</b>, press the <b>Left Arrow</b> on the remote circle to browse categories like Sports, News, and Kids.";
+            } else if (text.includes("movie") || text.includes("vod")) {
+                response = "For Movies, hold the <b>Center Button</b> for 2 seconds to open the side menu, then navigate down to the <b>VOD</b> (Play icon) section.";
+            } else if (text.includes("tube")) {
+                response = "<b>Stealth Tube</b> is your ad-free YouTube experience. Navigate using the circle and use <b>Back</b> to exit any video.";
+            }
+
+            addMessage(userInput.value, response);
+            userInput.value = "";
         }
+        userInput.addEventListener("keypress", (e) => { if (e.key === "Enter") askBrain(); });
     </script>
 </body>
 </html>
