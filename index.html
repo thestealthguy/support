@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stealth Support Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: sans-serif; }
+        .card { background: #1e293b; border-radius: 15px; padding: 25px; border: 1px solid #334155; }
+        .btn { background: #3b82f6; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; color: white; margin: 5px; }
+        .btn:hover { background: #2563eb; transform: scale(1.02); }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+    <div class="max-w-xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-blue-400">STEALTH</h1>
+            <p class="text-slate-400">Customer Self-Service Portal</p>
+        </div>
+        
+        <div id="app" class="card shadow-2xl min-h-[400px] flex flex-col justify-between">
+            <div id="chat" class="space-y-4">
+                <p class="text-xl">👋 <strong>Welcome to Stealth Support!</strong></p>
+                <p class="text-slate-300">I am your automated guide. How can I help you with your <strong>ONN 4K Plus</strong> or <strong>Stealth IPTV Mate</strong> today?</p>
+            </div>
+
+            <div id="options" class="mt-8 flex flex-wrap">
+                <button onclick="showRemote()" class="btn">Help with Remote</button>
+                <button onclick="showFeatures()" class="btn">Player Features</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chat = document.getElementById('chat');
+        const options = document.getElementById('options');
+
+        function showRemote() {
+            chat.innerHTML = `
+                <p class="text-blue-400 font-bold underline">The ONN 4K Plus Remote Guide:</p>
+                <ul class="list-disc ml-5 space-y-2 text-slate-200">
+                    <li><strong>Big Circle:</strong> This is your 'D-Pad'. Press top/bottom/left/right to move.</li>
+                    <li><strong>Center Button:</strong> The circle in the middle. Click it to SELECT.</li>
+                    <li><strong>Back Button:</strong> The arrow pointing left. Use this to go back one screen.</li>
+                    <li><strong>Home Button:</strong> The house icon. This takes you to the Projectivy screen.</li>
+                </ul>
+                <p class="mt-4 italic text-sm">Where are you stuck on the remote?</p>`;
+            options.innerHTML = `<button onclick="location.reload()" class="btn">Back to Start</button>`;
+        }
+
+        function showFeatures() {
+            chat.innerHTML = `
+                <p class="text-blue-400 font-bold underline">Stealth IPTV Mate Features:</p>
+                <p>Inside the player, you have "Live TV" and "VOD" (Movies).</p>
+                <p class="mt-2"><strong>Secret Tip:</strong> Hold down the Center Button for 2 seconds to see your Channel Groups!</p>`;
+            options.innerHTML = `<button onclick="location.reload()" class="btn">Back to Start</button>`;
+        }
+    </script>
+</body>
+</html>
